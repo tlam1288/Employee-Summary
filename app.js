@@ -4,13 +4,33 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+const util = require("util");
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const writeFileAsync = util.promisify(fs.writeFile);
 
+inquirer
+  .prompt([
+    {
+      type: "input",
+      message: "What is your manager's name?",
+      name: "manager",
+    },
+  ])
+  .then(function (answer) {
+    const teamMember = answer;
 
+    writeFileAsync("team.html", teamMember).then(function (error) {
+      if (error) {
+        console.log(error);
+        return console.log(error);
+      }
+      console.log("Success!");
+    });
+  });
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
